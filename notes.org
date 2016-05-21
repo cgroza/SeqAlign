@@ -1,0 +1,13 @@
+#+STARTUP: latexpreview
+
+* Theory
+To determine the maximum alignment score, maximize $V(i, j)$, where $s$ is the
+substitution matrix and $d$ is the gap penalty:
+\begin{*align}
+V(i,j) &= max
+\begin{cases}
+&V(i - 1, j - 1) + s(x_i, y_j), i = j\\
+&V(i, j - 1) + d, i < j\\
+&V(i - 1, j) + d, i > j\\
+\end{cases}
+\end{*align}
