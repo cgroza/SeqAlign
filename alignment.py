@@ -3,7 +3,7 @@ T1 = "GAATC"
 T2 = "CATAC"
 
 # Used to map sequence elements to their coordinate in the substitution matrix
-baseToInt = {'A' : 0, 'C' : 1, 'G' : 2, 'T' : 3}
+b2i = {'A' : 0, 'C' : 1, 'G' : 2, 'T' : 3}
 
 # Substitution matrix
 sub = [
@@ -29,13 +29,27 @@ def V(i, j, s1, s2):
     if i == 0 and j == 0:
         return 0;
     # Maximization list of all the recursive paths
-    return max([V(i - 1, j - 1, s1, s2) + sub[baseToInt[s1[i]]][baseToInt[s2[j]]],
+    return max([V(i - 1, j - 1, s1, s2) + sub[b2i[s1[i]]][b2i[s2[j]]],
                 V(i, j - 1, s1, s2) + d,
                 V(i - 1, j, s1, s2) + d])
 
 # Matrix method, most efficient
 def F(i, j, s1, s2):
-    pass
+    # j is row number, i is column number
+    matrix = [[0 for x in range(len(s1))] for y in range(len(s2))]
+    # Fill first horizontal row
+    for k in range(0, i + 1):
+        matrix[0][k] = k * d;
+    # Fill first vertical column
+    for k in range(0, j + 1):
+        matrix[k][0] = k * d
+    # Iterate column by column and fill cells
+    for z in range(1, i + 1):
+        for k in range(1, j + 1):
+            matrix[k][z] = max ([matrix[k - 1][z - 1] + sub[b2i[s1[z]]][b2i[s2[k]]],
+                                 matrix[k - 1][z] + d,
+                                 matrix[k][z - 1] + d])
+    return matrix
 
 # Creates visual visualization of V(i, j) values for all pairs of V(i, j)
 def CreateMatrix(seq1, seq2):
@@ -56,3 +70,9 @@ def FindMaxV(s1, s2):
     # ... spaces are added to realign the sequence indexes with the string
     # indices.
     return V(len(s1), len(s2), " " + s1, " " + s2)
+
+def FindMaxF(s1, s2):
+    # Since sequences are indexed from 1 ... and strings are indexed from 0
+    # ... spaces are added to realign the sequence indexes with the string
+    # indices.
+    return F(len(s1), len(s2), " " + s1, " " + s2)
