@@ -1,3 +1,4 @@
+from itertools import izip
 # Test sequences
 T1 = "GAATC"
 T2 = "CATAC"
@@ -78,6 +79,22 @@ def GlobalAlignMatrix(i, j, s1, s2):
                                  matrix[k][z - 1] + d])
     return matrix
 
+def GlobalTraceBack(matrix):
+    j = len(matrix) - 1             # number of rows
+    i = len(matrix[0]) - 1          # number of columns
+    trace = [(j, i)]                # initial point
+    while i != 0 and j !=0:
+        # Remove i, j < 0, accept i, j => 0
+        cells = filter (lambda x : False if (x[0] < 0 and x[1] >= 0) or (x[0] >= 0 and x[1] < 0) else True
+                        ,[(j - 1, i - 1), (j - 1, i), (j, i - 1)])
+        values = map(lambda c: matrix[c[0]][c[1]], cells)
+        bestNeighbour = max (zip (cells, values), key = lambda x: x[1])
+        # Set new i, j values
+        j = bestNeighbour[0][0]
+        i = bestNeighbour[0][1]
+        trace.append(bestNeighbour[0]) # only add the (j, i) value
+    return trace
+
 # Creates visual visualization of V(i, j) values for all pairs of V(i, j)
 def CreateMatrix(seq1, seq2):
     matrix = [['a' for x in range(len(seq1))] for y in range(len(seq2))]
@@ -102,7 +119,7 @@ def FindGlobalAligScore(s1, s2):
 def FindGlobalAlignMatrixScore(s1, s2):
     j = len(s2)
     i = len(s1)
-    return GlobalAlignMatrix(i, j, " " + s1, " " + s2)[j][i]
+    return GlobalAlignMatrix(i, j, " " + s1, " " + s2)
 
 def FindLocalAlignScore(s1, s2):
     return LocalAlign(len(s1), len(s2), " " + s1, " " + s2)
