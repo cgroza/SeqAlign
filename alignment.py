@@ -99,11 +99,14 @@ def PrintMatrix(m):
 def FindGlobalAligScore(s1, s2):
     return GlobalAlign(len(s1), len(s2), " " + s1, " " + s2)
 
-def FindGlobalAligMatrixScore(s1, s2):
-    return GlobalAlignMatrix(len(s1), len(s2), " " + s1, " " + s2)
+def FindGlobalAlignMatrixScore(s1, s2):
+    j = len(s2)
+    i = len(s1)
+    return GlobalAlignMatrix(i, j, " " + s1, " " + s2)[j][i]
 
 def FindLocalAlignScore(s1, s2):
     return LocalAlign(len(s1), len(s2), " " + s1, " " + s2)
 
 def FindLocalAlignMatrixScore(s1, s2):
-    return LocalAlignMatrix(len(s1), len(s2), " " + s1, " " + s2)
+    # Flatten list and return maximum value in matrix
+    return max([i for row in LocalAlignMatrix(len(s1), len(s2), " " + s1, " " + s2) for i in row])
