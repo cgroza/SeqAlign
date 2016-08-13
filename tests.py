@@ -4,11 +4,13 @@ from alignment import *
 T1 = "GAATC"
 T2 = "CATAC"
 
-# Alignment
+print "S1: " + T1
+print "S2: " + T2
 
+# Alignment
 a = Alignment(T1, T2)
 
 # Global alignment test
-print a.GlobalTraceback()
+print "Global alignment: " + str(a.GlobalTraceback())
 # Local alignment test
-print a.LocalTraceback()
+print "Local alignment: " + str(a.LocalTraceback())
