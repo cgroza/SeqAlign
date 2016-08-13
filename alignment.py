@@ -29,10 +29,10 @@ class Alignment:
         # maxJ is associated with s2
         self.maxI = len(s1)
         self.maxJ = len(s2)
-        self.globalMatrix = self.GlobalAlignMatrix()
-        self.localMatrix = self.LocalAlignMatrix()
+        self.globalMatrix = self._GlobalAlignMatrix()
+        self.localMatrix = self._LocalAlignMatrix()
 
-    def LocalAlignMatrix(self):
+    def _LocalAlignMatrix(self):
         # j is row number, i is column number
         matrix = [[0 for x in range(len(self.s1))]
                   for y in range(len(self.s2))]
@@ -48,11 +48,11 @@ class Alignment:
                 matrix[k][z] = max(
                     [matrix[k - 1][z - 1] +
                      sub[b2i[self.s1[z]]][b2i[self.s2[k]]],
-                     matrix[k - 1][z] + d, matrix[k][z - 1] + d])
+                     matrix[k - 1][z] + d, matrix[k][z - 1] + d, 0])
         return matrix
 
     # Matrix method, most efficient
-    def GlobalAlignMatrix(self):
+    def _GlobalAlignMatrix(self):
         j, i = self.maxJ, self.maxI
         # j is row number (s2), i is column number (s1)
         matrix = [[0 for x in range(len(self.s1))]
@@ -72,7 +72,7 @@ class Alignment:
                      matrix[k - 1][z] + d, matrix[k][z - 1] + d])
         return matrix
 
-    def _Traceback(self, i, j, matrix):
+    def _GlobalTraceback(self, i, j, matrix):
         s1Aligned = ""
         s2Aligned = ""
         while i > 0 and j > 0:
@@ -98,28 +98,22 @@ class Alignment:
             j -= 1
         return (s1Aligned[::-1], s2Aligned[::-1])
 
+    def _LocalTraceback(self, i, j, matrix):
+        s1Aligned = ""
+        s2Aligned = ""
+        return (s1Aligned[::-1], s2Aligned[::-1])
+
     def GlobalTraceback(self):
-        return self._Traceback(self.maxI, self.maxJ, self.globalMatrix)
+        return self._GlobalTraceback(self.maxI, self.maxJ, self.globalMatrix)
 
     def LocalTraceback(self):
-        # Find the position of largest value
-        # Highest i positions in row order
-        maxColumns = [row.index(max(row)) for row in self.localMatrix]
-        # Map rows to the highest value they contain
-        maxRows = map(max, self.localMatrix)
-        # maximum j is the index of the row with highest maximum value
-        j = maxRows.index(max(maxRows))
-        # Get the i of the maximum value in the row corresponding to maximum j
-        i = maxColumns[j]
-        return self._Traceback(i, j, self.localMatrix)
-
+        pass
     def GetGlobalAlignScore(self):
         return self.globalMatrix[j][i]
 
     def GetLocalAlignScore(self):
         # Flatten list and return maximum value in matrix
         return max([i for row in self.localMatrix for i in row])
-
 
 # Local alignment function. Recursive method
 def LocalAlignScore(i, j, s1, s2):
