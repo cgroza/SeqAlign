@@ -72,6 +72,10 @@ class Alignment:
     def GlobalTraceback(self, i, j, matrix):
         s1Aligned = ""
         s2Aligned = ""
+        # Start at the lower right corner and see which of the three adjacent
+        # matrix cells yield the score in the current cell by applying the
+        # recursive conditions. Move to the correct cell and repeat until
+        # (i,  j) = (0, 0)
         while i > 0 and j > 0:
             if matrix[j][i] == matrix[j - 1][i - 1] + sub[b2i[self.s1[i]]][b2i[
                     self.s2[j]]]:
@@ -87,15 +91,23 @@ class Alignment:
                 s1Aligned += " "
                 s2Aligned += self.s2[j]
                 j -= 1
+        # Matrix edge reached. Put all remaining characters in the non
+        # exhausted string against spaces.
         while i > 0:
             s1Aligned += self.s1[i]
             i -= 1
         while j > 0:
             s2Aligned += self.s2[j]
             j -= 1
+        # The strings were built in reverse order.
         return (s1Aligned[::-1], s2Aligned[::-1])
 
     def _LocalTraceback(self, i, j, matrix):
+        # Local traceback is exactly the same as global traceback except that
+        # we begin at the highest value and stop at the first 0 value instead
+        # of starting at (i, j) = (maxI, maxJ) and continuing to (i, j) = (0,
+        # 0).
+
         # Find the position of largest value
         # Highest i positions in row order
         maxColumns = [row.index(max(row)) for row in self.localMatrix]
@@ -105,10 +117,10 @@ class Alignment:
         j = maxRows.index(max(maxRows))
         # Get the i of the maximum value in the row corresponding to maximum j
         i = maxColumns[j]
-
         s1Aligned = ""
         s2Aligned = ""
         # Trace from the highest value (i, j) to a 0 value
+        # See explanation from GlobalTraceback.
         while matrix[j][i] != 0:
             if matrix[j][i] == matrix[j - 1][i - 1] + sub[b2i[self.s1[i]]][b2i[
                     self.s2[j]]]:
