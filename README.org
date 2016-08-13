@@ -1,7 +1,7 @@
 * Contents
 This repository contains my own implementations of common sequence alignment algorithms.
 Examples:
-#+BEGIN_SRC python :export results :results output
+#+BEGIN_SRC python :exports both :results output
 from tests import *
 doTests()
 #+END_SRC
