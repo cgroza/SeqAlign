@@ -1,7 +1,4 @@
 from itertools import izip
-# Test sequences
-T1 = "GAATC"
-T2 = "CATAC"
 
 # Used to map sequence elements to their coordinate in the substitution matrix
 b2i = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
@@ -72,7 +69,7 @@ class Alignment:
                      matrix[k - 1][z] + d, matrix[k][z - 1] + d])
         return matrix
 
-    def _GlobalTraceback(self, i, j, matrix):
+    def GlobalTraceback(self, i, j, matrix):
         s1Aligned = ""
         s2Aligned = ""
         while i > 0 and j > 0:
@@ -99,21 +96,43 @@ class Alignment:
         return (s1Aligned[::-1], s2Aligned[::-1])
 
     def _LocalTraceback(self, i, j, matrix):
+        # Find the position of largest value
+        # Highest i positions in row order
+        maxColumns = [row.index(max(row)) for row in self.localMatrix]
+        # Map rows to the highest value they contain
+        maxRows = map(max, self.localMatrix)
+        # maximum j is the index of the row with highest maximum value
+        j = maxRows.index(max(maxRows))
+        # Get the i of the maximum value in the row corresponding to maximum j
+        i = maxColumns[j]
+
         s1Aligned = ""
         s2Aligned = ""
+        # Trace from the highest value (i, j) to a 0 value
+        while matrix[j][i] != 0:
+            if matrix[j][i] == matrix[j - 1][i - 1] + sub[b2i[self.s1[i]]][b2i[
+                    self.s2[j]]]:
+                s1Aligned += self.s1[i]
+                s2Aligned += self.s2[j]
+                j -= 1
+                i -= 1
+            elif matrix[j][i] == matrix[j][i - 1] + d:
+                s1Aligned += self.s1[i]
+                s2Aligned += " "
+                i -= 1
+            elif matrix[j][i] == matrix[j - 1][i] + d:
+                s1Aligned += " "
+                s2Aligned += self.s2[j]
+                j -= 1
         return (s1Aligned[::-1], s2Aligned[::-1])
 
-    def GlobalTraceback(self):
-        return self._GlobalTraceback(self.maxI, self.maxJ, self.globalMatrix)
-
-    def LocalTraceback(self):
-        pass
     def GetGlobalAlignScore(self):
         return self.globalMatrix[j][i]
 
     def GetLocalAlignScore(self):
         # Flatten list and return maximum value in matrix
         return max([i for row in self.localMatrix for i in row])
+
 
 # Local alignment function. Recursive method
 def LocalAlignScore(i, j, s1, s2):
