@@ -69,13 +69,15 @@ class Alignment:
                      matrix[k - 1][z] + d, matrix[k][z - 1] + d])
         return matrix
 
-    def GlobalTraceback(self, i, j, matrix):
+    def GlobalTraceback(self):
         s1Aligned = ""
         s2Aligned = ""
         # Start at the lower right corner and see which of the three adjacent
         # matrix cells yield the score in the current cell by applying the
         # recursive conditions. Move to the correct cell and repeat until
         # (i,  j) = (0, 0)
+        matrix = self.globalMatrix
+        i, j = self.maxI, self.maxJ
         while i > 0 and j > 0:
             if matrix[j][i] == matrix[j - 1][i - 1] + sub[b2i[self.s1[i]]][b2i[
                     self.s2[j]]]:
@@ -102,17 +104,17 @@ class Alignment:
         # The strings were built in reverse order.
         return (s1Aligned[::-1], s2Aligned[::-1])
 
-    def _LocalTraceback(self, i, j, matrix):
+    def LocalTraceback(self):
         # Local traceback is exactly the same as global traceback except that
         # we begin at the highest value and stop at the first 0 value instead
         # of starting at (i, j) = (maxI, maxJ) and continuing to (i, j) = (0,
         # 0).
-
+        matrix = self.localMatrix
         # Find the position of largest value
         # Highest i positions in row order
-        maxColumns = [row.index(max(row)) for row in self.localMatrix]
+        maxColumns = [row.index(max(row)) for row in matrix]
         # Map rows to the highest value they contain
-        maxRows = map(max, self.localMatrix)
+        maxRows = map(max, matrix)
         # maximum j is the index of the row with highest maximum value
         j = maxRows.index(max(maxRows))
         # Get the i of the maximum value in the row corresponding to maximum j
