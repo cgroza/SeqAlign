@@ -10,4 +10,5 @@ doTests()
 : S2: CATAC
 : Global alignment: ('GA ATC', 'CATA C')
 : Local alignment: ('AT C', 'ATAC')
+: End gap alignment: ('AT C', 'ATAC')
 

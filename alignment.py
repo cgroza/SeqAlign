@@ -14,7 +14,6 @@ sub = [
 # Gap penalty
 d = -4
 
-
 class Alignment:
     def __init__(self, s1, s2):
         # Since sequences are indexed from 1 ... and strings are indexed from 0
@@ -172,7 +171,6 @@ class Alignment:
         # Flatten list and return maximum value in matrix
         return max([i for row in self.localMatrix for i in row])
 
-
 # Local alignment function. Recursive method
 def LocalAlignScore(i, j, s1, s2):
     # Base cases
@@ -182,7 +180,6 @@ def LocalAlignScore(i, j, s1, s2):
     return max([LocalAlign(i - 1, j - 1) + sub[b2i[s1[i]]][b2i[s2[j]]],
                 LocalAlign(i, j - 1, s1, s2) + d,
                 LocalAlign(i - 1, j, s1, s2) + d])
-
 
 # Recursive method, not the most efficient
 def GlobalAlignScore(i, j, s1, s2):
@@ -201,10 +198,8 @@ def GlobalAlignScore(i, j, s1, s2):
         [GlobalAlign(i - 1, j - 1, s1, s2) + sub[b2i[s1[i]]][b2i[s2[j]]],
          GlobalAlign(i, j - 1, s1, s2) + d, GlobalAlign(i - 1, j, s1, s2) + d])
 
-
 def FindGlobalAlignScore(s1, s2):
     return GlobalAlign(len(s1), len(s2), " " + s1, " " + s2)
-
 
 # Creates visual visualization of V(i, j) values for all pairs of V(i, j)
 def CreateMatrix(seq1, seq2):
@@ -213,7 +208,6 @@ def CreateMatrix(seq1, seq2):
         for m in range(len(seq1)):
             matrix[n][m] = GlobalAlign(m, n, seq1, seq2)
     return matri
-
 
 # Basic pretty printing function
 def PrintMatrix(m):
