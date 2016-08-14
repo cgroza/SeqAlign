@@ -160,6 +160,11 @@ class Alignment:
             i, j = self.maxI, lastColumn.index(lastColumnMax)
         return self._LocalTraceback(i, j)
 
+    def EndGapAlignScore(self):
+        # Concatenate last row with last column and return the maximum
+        return max(self.localMatrix[self.maxJ] + [r[self.maxI]
+                                                  for r in self.localMatrix])
+
     def GetGlobalAlignScore(self):
         return self.globalMatrix[j][i]
 
