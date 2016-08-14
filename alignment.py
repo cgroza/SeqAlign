@@ -105,11 +105,6 @@ class Alignment:
         return (s1Aligned[::-1], s2Aligned[::-1])
 
     def LocalTraceback(self):
-        # Local traceback is exactly the same as global traceback except that
-        # we begin at the highest value and stop at the first 0 value instead
-        # of starting at (i, j) = (maxI, maxJ) and continuing to (i, j) = (0,
-        # 0).
-        matrix = self.localMatrix
         # Find the position of largest value
         # Highest i positions in row order
         maxColumns = [row.index(max(row)) for row in matrix]
@@ -119,6 +114,14 @@ class Alignment:
         j = maxRows.index(max(maxRows))
         # Get the i of the maximum value in the row corresponding to maximum j
         i = maxColumns[j]
+        self._LocalTraceback(i, j)
+
+    def _LocalTraceback(self, i, j):
+        # Local traceback is exactly the same as global traceback except that
+        # we begin at the highest value and stop at the first 0 value instead
+        # of starting at (i, j) = (maxI, maxJ) and continuing to (i, j) = (0,
+        # 0).
+        matrix = self.localMatrix
         s1Aligned = ""
         s2Aligned = ""
         # Trace from the highest value (i, j) to a 0 value
@@ -139,6 +142,24 @@ class Alignment:
                 s2Aligned += self.s2[j]
                 j -= 1
         return (s1Aligned[::-1], s2Aligned[::-1])
+
+    def EndGapTraceback(self):
+        # Find the highest vertical or horizontal value on last column or row.
+        # Values in last row
+        matrix = self.localMatrix
+        lastRow = matrix[self.maxJ]
+        # Values in last column
+        lastColumn = [r[self.maxI] for r in matrix]
+        # Find the maximum value on the last row and last column
+        lastRowMax = max(lastRow)
+        lastColumnMax = max(lastColumn)
+        i, j = 0, 0
+        # Use the largest value as origin of traceback
+        if lastRowMax > lastColumnMax:
+            i, j = lastRow.index(lastRowMax), self.maxJ
+        else:
+            i, j = self.maxI, lastColumn.index(lastColumnMax)
+        return self._LocalTraceback(i, j)
 
     def GetGlobalAlignScore(self):
         return self.globalMatrix[j][i]
