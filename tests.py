@@ -15,3 +15,5 @@ def doTests():
     print "Global alignment: " + str(a.GlobalTraceback())
     # Local alignment test
     print "Local alignment: " + str(a.LocalTraceback())
+    # End gap alignment tests
+    print "End gap alignment: " + str(a.EndGapTraceback())

@@ -107,14 +107,14 @@ class Alignment:
     def LocalTraceback(self):
         # Find the position of largest value
         # Highest i positions in row order
-        maxColumns = [row.index(max(row)) for row in matrix]
+        maxColumns = [row.index(max(row)) for row in self.localMatrix]
         # Map rows to the highest value they contain
-        maxRows = map(max, matrix)
+        maxRows = map(max, self.localMatrix)
         # maximum j is the index of the row with highest maximum value
         j = maxRows.index(max(maxRows))
         # Get the i of the maximum value in the row corresponding to maximum j
         i = maxColumns[j]
-        self._LocalTraceback(i, j)
+        return self._LocalTraceback(i, j)
 
     def _LocalTraceback(self, i, j):
         # Local traceback is exactly the same as global traceback except that
@@ -146,10 +146,9 @@ class Alignment:
     def EndGapTraceback(self):
         # Find the highest vertical or horizontal value on last column or row.
         # Values in last row
-        matrix = self.localMatrix
-        lastRow = matrix[self.maxJ]
+        lastRow = self.localMatrix[self.maxJ]
         # Values in last column
-        lastColumn = [r[self.maxI] for r in matrix]
+        lastColumn = [r[self.maxI] for r in self.localMatrix]
         # Find the maximum value on the last row and last column
         lastRowMax = max(lastRow)
         lastColumnMax = max(lastColumn)
