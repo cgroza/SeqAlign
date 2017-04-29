@@ -1,4 +1,5 @@
 from itertools import izip
+import math
 
 # Used to map sequence elements to their coordinate in the substitution matrix
 b2i = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
@@ -197,6 +198,19 @@ def GlobalAlignScore(i, j, s1, s2):
     return max(
         [GlobalAlign(i - 1, j - 1, s1, s2) + sub[b2i[s1[i]]][b2i[s2[j]]],
          GlobalAlign(i, j - 1, s1, s2) + d, GlobalAlign(i - 1, j, s1, s2) + d])
+
+# E(C_m) = n^2 * p^m
+# Calculates the expected number of m length common substrings for two random
+# strings of length n, alphabet size z for which p = 1 / z
+def ExpectedNumberOfSubstr(n, p, m):
+    return math.pow(n, 2) * math.pow(p, m)
+
+# r <= 2log_z(n) where r is max m for which E(C_m) >= 1
+def MaxCommonSubstrLength(n, z):
+    return 2*math.log(n, z)
+
+def MinimumCommonSubseq(n, z):
+    return float(n) / float(z)
 
 def FindGlobalAlignScore(s1, s2):
     return GlobalAlign(len(s1), len(s2), " " + s1, " " + s2)

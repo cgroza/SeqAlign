@@ -1,4 +1,6 @@
 from alignment import *
+from ultm import *
+from binarytree import pprint
 
 def doTests():
     # Test sequences
@@ -17,4 +19,9 @@ def doTests():
     print "Local alignment: " + str(a.LocalTraceback())
     # End gap alignment tests
     print "End gap alignment: " + str(a.EndGapTraceback())
+
+    print "\n Ultramtric Tree Test:"
+    print test_matrix
+    pprint(make_tree(test_matrix))
+
     return a

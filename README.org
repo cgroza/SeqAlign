@@ -1,14 +1,32 @@
 * Contents
-This repository contains my own implementations of common sequence alignment algorithms.
+This repository contains my own implementations of common bioinformatics algorithms.
 Examples:
 #+BEGIN_SRC python :exports both :results output
 from tests import *
 doTests()
 #+END_SRC
 #+RESULTS:
-: S1: GAATC
-: S2: CATAC
-: Global alignment: ('GA ATC', 'CATA C')
-: Local alignment: ('AT C', 'ATAC')
-: End gap alignment: ('AT C', 'ATAC')
+#+begin_example
+S1: GAATC
+S2: CATAC
+Global alignment: ('GA ATC', 'CATA C')
+Local alignment: ('AT C', 'ATAC')
+End gap alignment: ('AT C', 'ATAC')
+
+ Ultramtric Tree Test:
+[[0, 8, 8, 5, 3],
+ [8, 0, 3, 8, 8],
+ [8, 3, 0, 8, 8],
+ [5, 8, 8, 0, 5],
+ [3, 8, 8, 5, 0]]
+
+                   _____D(2,3)=8_____        
+                  /                  \       
+        _____D(3,4)=5              D(1,2)=3  
+       /             \            /        \ 
+  D(0,4)=3            3          2          1
+ /        \                                  
+4          0                                 
+                                             
+#+end_example
 
